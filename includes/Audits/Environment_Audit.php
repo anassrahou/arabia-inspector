@@ -21,7 +21,7 @@ class Environment_Audit {
             'wordpress_version' => $wp_version,
             'php_version'       => phpversion(),
             'language'          => get_bloginfo( 'language' ),
-            'rtl'               => is_rtl() ? 'Yes' : 'No',
+            'rtl'               => is_rtl(),
             'theme'             => wp_get_theme()->get( 'Name' ),
         );
 	}
