@@ -2,6 +2,8 @@
 
 namespace AI\Core;
 
+use AI\Audits\Environment_Audit;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -44,18 +46,50 @@ class Admin {
 	 * @return void
 	 */
 	public static function render_dashboard() {
+
+        $audit_results = Environment_Audit::run();
 		?>
 
-		<div class="wrap">
-			<h1><?php esc_html_e( 'Arabia Inspector', 'arabia-inspector' ); ?></h1>
+        <table class="widefat striped">
+            <thead>
+                <tr>
+                    <th><?php esc_html_e( 'Check', 'arabia-inspector' ); ?></th>
+                    <th><?php esc_html_e( 'Value', 'arabia-inspector' ); ?></th>
+                </tr>
+            </thead>
+            <tbody>
 
-			<p>
-				<?php esc_html_e(
-					'Welcome to Arabia Inspector.',
-					'arabia-inspector'
-				); ?>
-			</p>
-		</div>
+                <?php
+
+                $labels = array(
+                    'wordpress_version' => __( 'WordPress Version', 'arabia-inspector' ),
+                    'php_version'       => __( 'PHP Version', 'arabia-inspector' ),
+                    'language'          => __( 'Language', 'arabia-inspector' ),
+                    'rtl'               => __( 'RTL Enabled', 'arabia-inspector' ),
+                    'theme'             => __( 'Active Theme', 'arabia-inspector' ),
+                );
+
+                foreach ( $labels as $key => $label ) :
+
+                    $value = $audit_results[ $key ] ?? '';
+
+                    if ( is_bool( $value ) ) {
+                        $value = $value
+                            ? __( 'Yes', 'arabia-inspector' )
+                            : __( 'No', 'arabia-inspector' );
+                    }
+
+                ?>
+
+                <tr>
+                    <td><?php echo esc_html( $label ); ?></td>
+                    <td><?php echo esc_html( $value ); ?></td>
+                </tr>
+
+                <?php endforeach; ?>
+
+            </tbody>
+        </table>
 
 		<?php
 	}
