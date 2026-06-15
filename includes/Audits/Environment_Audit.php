@@ -16,9 +16,13 @@ class Environment_Audit {
 	public static function run() {
 
         global $wp_version;
-        
+
 		return array(
             'wordpress_version' => $wp_version,
+            'php_version'       => phpversion(),
+            'language'          => get_bloginfo( 'language' ),
+            'rtl'               => is_rtl() ? 'Yes' : 'No',
+            'theme'             => wp_get_theme()->get( 'Name' ),
         );
 	}
 }
