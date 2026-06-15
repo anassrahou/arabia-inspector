@@ -16,18 +16,38 @@ class Environment_Audit {
 	public static function run() {
 
         global $wp_version;
+        $php_version = phpversion();
+        
+        if ( version_compare( $php_version, '8.1' , '<' ) ) {
+            
+            $status ='warning';
+            $message = __( 'PHP version is below 8.1, which may lead to compatibility issues.', 'arabia-inspector' );
+        } else {
+            $status = 'pass';
+            $message = __( 'PHP version is compatible.', 'arabia-inspector' );
+        }
 
         return array(
-            __( 'WordPress Version', 'arabia-inspector' ) => $wp_version,
-            __( 'PHP Version', 'arabia-inspector' )       => phpversion(),
-            __( 'Language', 'arabia-inspector' )          => get_bloginfo( 'language' ),
-            __( 'RTL Enabled', 'arabia-inspector' )       => is_rtl(),
-            __( 'Active Theme', 'arabia-inspector' )      => wp_get_theme()->get( 'Name' ),
+            'wordpress_version' => $wp_version,
+            'php_version' => array(
+                'value'   => $php_version,
+                'status'  => $status,
+                'message' => $message,
+            ),
+            'language'          => get_bloginfo( 'language' ),
+            'rtl'               => is_rtl(),
+            'theme'             => wp_get_theme()->get( 'Name' ),
         );
 	}
 
     public static function get_score() {
 
-        return 80;
+        $score = 100;
+
+        if ( version_compare( phpversion(), '8.1' , '<' ) ) {
+            $score -= 30;
+        }
+
+        return max( 0, $score );
     }
 }
