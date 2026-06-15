@@ -1,0 +1,22 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Composer
+/vendor/
+
+# Node
+/node_modules/
+
+# WordPress
+wp-config.php
+
+# Archives
+*.zip
