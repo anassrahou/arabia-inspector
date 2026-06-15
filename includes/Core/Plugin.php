@@ -16,7 +16,13 @@ class Plugin {
 	public static function init() {
 
 		require_once AI_PLUGIN_DIR . 'includes/Core/Admin.php';
+        require_once AI_PLUGIN_DIR . 'includes/Audits/Environment_Audit.php';
 
-		Admin::init();
+		self::load_componenets();
 	}
+
+    public static function load_componenets() {
+     
+        Admin::init();
+    }
 }
