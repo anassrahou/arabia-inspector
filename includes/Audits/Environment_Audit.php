@@ -15,6 +15,10 @@ class Environment_Audit {
 	 */
 	public static function run() {
 
-		return array();
+        global $wp_version;
+        
+		return array(
+            'wordpress_version' => $wp_version,
+        );
 	}
 }

@@ -18,10 +18,10 @@ class Plugin {
 		require_once AI_PLUGIN_DIR . 'includes/Core/Admin.php';
         require_once AI_PLUGIN_DIR . 'includes/Audits/Environment_Audit.php';
 
-		self::load_componenets();
+		self::load_components();
 	}
 
-    public static function load_componenets() {
+    private static function load_components() {
      
         Admin::init();
     }
