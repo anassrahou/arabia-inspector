@@ -60,18 +60,30 @@ class Environment_Audit {
                 'status'  => version_compare( $wp_version, '6.0', '>=' ) ? 'pass' : 'warning',
                 'message' => version_compare( $wp_version, '6.0', '>=' ) ? __( 'WordPress version meets the minimum recommended requirement.', 'arabia-inspector' ) : __( 'Consider updating WordPress to the latest version for better security and performance.', 'arabia-inspector' ),
             ),
+
             'php_version' => array(
                 'value'   => $php_version,
                 'status'  => $status,
                 'message' => $message,
             ),
-            'language'          => $language,
+
+            'language'          => array(
+                'value'   => $language,
+                'status'  => 'pass',
+                'message' =>  __( 'Site language is configured.', 'arabia-inspector' ),
+            ),
+
             'rtl'               => array(
                 'value'   => $rtl  ? __( 'Yes', 'arabia-inspector' ) : __( 'No', 'arabia-inspector' ),
                 'status'  => $rtl_status,
                 'message' => $rtl_message,
             ),
-            'theme'             => wp_get_theme()->get( 'Name' ),
+
+            'theme'             => array(
+                'value'   => wp_get_theme()->get( 'Name' ),
+                'status'  => 'pass',
+                'message' => __( 'Active theme detected.', 'arabia-inspector' ),
+            ),
         );
 	}
 
