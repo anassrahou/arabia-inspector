@@ -28,7 +28,11 @@ class Environment_Audit {
         }
 
         return array(
-            'wordpress_version' => $wp_version,
+            'wordpress_version' => array(
+                'value'   => $wp_version,
+                'status'  => version_compare( $wp_version, '6.0', '>=' ) ? 'pass' : 'warning',
+                'message' => version_compare( $wp_version, '6.0', '>=' ) ? __( 'WordPress version meets the minimum recommended requirement.', 'arabia-inspector' ) : __( 'Consider updating WordPress to the latest version for better security and performance.', 'arabia-inspector' ),
+            ),
             'php_version' => array(
                 'value'   => $php_version,
                 'status'  => $status,
