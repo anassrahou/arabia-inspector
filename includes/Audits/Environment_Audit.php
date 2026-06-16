@@ -17,7 +17,34 @@ class Environment_Audit {
 
         global $wp_version;
         $php_version = phpversion();
+
+        $language = get_bloginfo( 'language' );
+       
+        $rtl = is_rtl();
         
+        if  ( strpos( $language, 'ar' ) !== false ) {
+
+            if( $rtl ) {
+                
+                $rtl_status = 'pass';
+
+                $rtl_message = __( 'RTL support is correctly configured for the site language.', 'arabia-inspector' );
+            
+            } else {
+
+                $rtl_status = 'warning';
+
+                $rtl_message = __( 'Site language is Arabic but RTL is not enabled.', 'arabia-inspector' );
+
+            }
+
+        } else {
+
+            $rtl_status = 'pass';
+
+            $rtl_message = __( 'RTL support is not required for the current site language.', 'arabia-inspector' );
+        }
+
         if ( version_compare( $php_version, '8.1' , '<' ) ) {
             
             $status ='warning';
@@ -38,8 +65,12 @@ class Environment_Audit {
                 'status'  => $status,
                 'message' => $message,
             ),
-            'language'          => get_bloginfo( 'language' ),
-            'rtl'               => is_rtl(),
+            'language'          => $language,
+            'rtl'               => array(
+                'value'   => $rtl  ? __( 'Yes', 'arabia-inspector' ) : __( 'No', 'arabia-inspector' ),
+                'status'  => $rtl_status,
+                'message' => $rtl_message,
+            ),
             'theme'             => wp_get_theme()->get( 'Name' ),
         );
 	}
