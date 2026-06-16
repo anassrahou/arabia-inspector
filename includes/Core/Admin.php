@@ -87,6 +87,7 @@ class Admin {
 
                 foreach ( $labels as $key => $label ) :
 
+                    $status = '—'; // Default status
                     // Get the value from audit results, handling cases where it might be an array or boolean.
                     $value = $audit_results[ $key ] ?? '';
 
