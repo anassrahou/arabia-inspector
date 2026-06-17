@@ -144,6 +144,8 @@ class Admin {
                     'wp_debug'      => __( 'WP Debug' , 'arabia-inspector' ),
                     'file_editor'   => __( 'File Editor' , 'arabia-inspector' ),
                     'ssl'           => __( 'SSL' , 'arabia-inspector' ),
+                    'file_mods'     => __( 'File Modifications' , 'arabia-inspector' ),
+                    'wp_debug_log'  => __( 'WP Debug Log' , 'arabia-inspector' ),
                 ); ?>
 
                 <?php 
