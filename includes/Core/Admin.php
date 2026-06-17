@@ -4,6 +4,7 @@ namespace AI\Core;
 
 use AI\Audits\Environment_Audit;
 use AI\Audits\Security_Audit;
+use AI\Audits\Score_Audit;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -48,10 +49,15 @@ class Admin {
      */
 	public static function render_dashboard() {
 
+        /*
+         * Run the audits and get results.
+         */
         $audit_results      = Environment_Audit::run();
-        $score              = Environment_Audit::get_score();
+        $environment_score  = Environment_Audit::get_score();
         $security_results   = Security_Audit::run();
         $security_score     = Security_Audit::get_score();
+        $overall_score      = Score_Audit::get_overall_score();
+
 		?>
 
         <div class="notice notice-info inline">
@@ -59,11 +65,29 @@ class Admin {
                 <strong>
                     <?php
                     printf(
-                        esc_html__( 'Environment Score: %d/100', 'arabia-inspector' ),
-                        $score
+                        esc_html__( 'Overall Score: %d/100', 'arabia-inspector' ),
+                        $overall_score
                     );
                     ?>
                 </strong>
+            </p>
+
+            <p>
+                <?php
+                printf(
+                    esc_html__( 'Environment Score: %d/100', 'arabia-inspector' ),
+                    $environment_score
+                );
+                ?>
+            </p>
+
+            <p>
+                <?php
+                printf(
+                    esc_html__( 'Security Score: %d/100', 'arabia-inspector' ),
+                    $security_score
+                );
+                ?>
             </p>
         </div>
 

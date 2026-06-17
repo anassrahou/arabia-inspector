@@ -18,6 +18,7 @@ class Plugin {
 		require_once AI_PLUGIN_DIR . 'includes/Core/Admin.php';
         require_once AI_PLUGIN_DIR . 'includes/Audits/Environment_Audit.php';
         require_once AI_PLUGIN_DIR . 'includes/Audits/Security_Audit.php';
+        require_once AI_PLUGIN_DIR . 'includes/Audits/Score_Audit.php';
 
 		self::load_components();
 	}
