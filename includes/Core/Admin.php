@@ -51,6 +51,7 @@ class Admin {
         $audit_results      = Environment_Audit::run();
         $score              = Environment_Audit::get_score();
         $security_results   = Security_Audit::run();
+        $security_score     = Security_Audit::get_score();
 		?>
 
         <div class="notice notice-info inline">
@@ -140,7 +141,9 @@ class Admin {
             </thead>
             <tbody>
                 <?php $security_labels = array(
-                    'wp_debug' => __( 'WP Debug' , 'arabia-inspector' ),
+                    'wp_debug'      => __( 'WP Debug' , 'arabia-inspector' ),
+                    'file_editor'   => __( 'File Editor' , 'arabia-inspector' ),
+                    'ssl'           => __( 'SSL' , 'arabia-inspector' ),
                 ); ?>
 
                 <?php 
