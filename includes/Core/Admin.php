@@ -221,6 +221,7 @@ class Admin {
                 <?php $rtl_labels = array(
                     'site_language' => __( 'Site Language' , 'arabia-inspector' ),
                     'rtl_enabled'   => __( 'RTL Enabled' , 'arabia-inspector' ),
+                    'rtl_stylesheet' => __( 'RTL Stylesheet', 'arabia-inspector' ),
                 ); ?>
 
                 <?php 

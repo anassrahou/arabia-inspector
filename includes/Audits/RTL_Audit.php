@@ -15,6 +15,7 @@ class RTL_Audit {
 
         $language = get_bloginfo( 'language' );
         $rtl = is_rtl();
+        $theme = wp_get_theme();
 
         if ( strpos( $language, 'ar' ) !== false ) {
 
@@ -31,6 +32,10 @@ class RTL_Audit {
             $rtl_message = __( 'RTL support is not required for the current site language.', 'arabia-inspector' );
         }
 
+        $rtl_style = file_exists(
+            $theme->get_stylesheet_directory() . '/rtl.css'
+        );
+
         return array (
             'site_language' => array(
                 'value'   => $language,
@@ -43,6 +48,15 @@ class RTL_Audit {
                     : __( 'No', 'arabia-inspector' ),
                 'status'  => $rtl_status,
                 'message' => $rtl_message,
+            ),
+            'rtl_stylesheet' => array(
+                'value'   => $rtl_style
+                    ? __( 'Yes', 'arabia-inspector' )
+                    : __( 'No', 'arabia-inspector' ),
+                'status'  => $rtl_style ? 'pass' : 'warning',
+                'message' => $rtl_style
+                    ? __( 'RTL stylesheet file was detected in the active theme.', 'arabia-inspector' )
+                    : __( 'RTL stylesheet file was not found in the active theme.', 'arabia-inspector' ),
             ),
         );
     }
@@ -59,6 +73,10 @@ class RTL_Audit {
             if ( !$rtl ) {
                 $score -= 50; // Warning if RTL is not enabled for Arabic language
 
+            }
+
+            if ( ! $rtl_style ) {
+                $score -= 25;
             }
         }
 
