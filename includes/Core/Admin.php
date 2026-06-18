@@ -5,6 +5,7 @@ namespace AI\Core;
 use AI\Audits\Environment_Audit;
 use AI\Audits\Security_Audit;
 use AI\Audits\Score_Audit;
+use AI\Audits\RTL_Audit;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -57,6 +58,8 @@ class Admin {
         $security_results   = Security_Audit::run();
         $security_score     = Security_Audit::get_score();
         $overall_score      = Score_Audit::get_overall_score();
+        $rtl_results         = RTL_Audit::run();
+        $rtl_score           = RTL_Audit::get_score();
 
 		?>
 
@@ -86,6 +89,14 @@ class Admin {
                 printf(
                     esc_html__( 'Security Score: %d/100', 'arabia-inspector' ),
                     $security_score
+                );
+                ?>
+            </p>
+            <p>
+                <?php
+                printf(
+                    esc_html__( 'RTL Score: %d/100', 'arabia-inspector' ),
+                    $rtl_score
                 );
                 ?>
             </p>
@@ -194,6 +205,44 @@ class Admin {
             </tbody>
                 
         </table>
+
+        <h2><?php esc_html_e( 'RTL Audit', 'arabia-inspector' ); ?></h2>
+        <table class="widefat striped">
+            
+            <thead>
+                <tr>
+                    <th><?php esc_html_e( 'Check', 'arabia-inspector' ); ?></th>
+                    <th><?php esc_html_e( 'Value', 'arabia-inspector' ); ?></th>
+                    <th><?php esc_html_e( 'Status', 'arabia-inspector' ); ?></th>
+                    <th><?php esc_html_e( 'Message', 'arabia-inspector' ); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $rtl_labels = array(
+                    'site_language' => __( 'Site Language' , 'arabia-inspector' ),
+                    'rtl_enabled'   => __( 'RTL Enabled' , 'arabia-inspector' ),
+                ); ?>
+
+                <?php 
+                foreach ( $rtl_labels as $key => $label ) :
+                    
+                    $result     = $rtl_results[ $key ] ?? array();
+                    $value      = $result['value'] ?? '';
+                    $status     = $result['status'] ?? '—';
+                    $message    = $result['message'] ?? '—';
+                ?>
+
+                    <tr>
+                        <td><?php echo esc_html( $label ); ?></td>
+                        <td><?php echo esc_html( $value ); ?></td>
+                        <td><?php echo esc_html( $status ); ?></td>
+                        <td><?php echo esc_html( $message ); ?></td>
+                    </tr>
+                <?php
+                endforeach;
+                
+                ?>
+            </tbody>
 
 		<?php
 	}
