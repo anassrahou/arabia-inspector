@@ -57,6 +57,7 @@ class Admin {
         $security_results   = Security_Audit::run();
         $security_score     = Security_Audit::get_score();
         $overall_score      = Score_Audit::get_overall_score();
+        $overall_rating     = Score_Audit::get_rating( $overall_score );
 
 		?>
 
@@ -86,6 +87,15 @@ class Admin {
                 printf(
                     esc_html__( 'Security Score: %d/100', 'arabia-inspector' ),
                     $security_score
+                );
+                ?>
+            </p>
+            <p>
+                <?php
+                printf(
+                    esc_html__( 'Overall Score: %1$d/100 (%2$s)', 'arabia-inspector' ),
+                    $overall_score,
+                    $overall_rating
                 );
                 ?>
             </p>

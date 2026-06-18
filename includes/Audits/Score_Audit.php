@@ -17,4 +17,25 @@ class Score_Audit {
 
         return round( $overall_score );
     }
+
+    public static function get_rating( $score ) {
+
+        if ( $score >= 90 ) {
+            return __( 'Excellent', 'arabia-inspector' );
+        }
+
+        if ( $score >= 75 ) {
+            return __( 'Good', 'arabia-inspector' );
+        }
+
+        if ( $score >= 50 ) {
+            return __( 'Needs Attention', 'arabia-inspector' );
+        }
+
+        if ( $score >= 0 ) {
+            return __( 'Critical', 'arabia-inspector' );
+        }
+
+        return __( 'Invalid Score', 'arabia-inspector' );
+    }
 }
