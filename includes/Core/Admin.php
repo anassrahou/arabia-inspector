@@ -55,8 +55,13 @@ class Admin {
          */
         $audit_results      = Environment_Audit::run();
         $environment_score  = Environment_Audit::get_score();
+
         $security_results   = Security_Audit::run();
         $security_score     = Security_Audit::get_score();
+
+        $rtl_results        = RTL_Audit::run();
+        $rtl_score          = RTL_Audit::get_score();
+
         $overall_score      = Score_Audit::get_overall_score();
         $overall_rating     = Score_Audit::get_rating( $overall_score );
 
@@ -67,8 +72,12 @@ class Admin {
                 <strong>
                     <?php
                     printf(
-                        esc_html__( 'Overall Score: %d/100', 'arabia-inspector' ),
-                        $overall_score
+                        esc_html__(
+                            'Overall Score: %1$d/100 (%2$s)',
+                            'arabia-inspector'
+                        ),
+                        $overall_score,
+                        $overall_rating
                     );
                     ?>
                 </strong>
@@ -77,7 +86,10 @@ class Admin {
             <p>
                 <?php
                 printf(
-                    esc_html__( 'Environment Score: %d/100', 'arabia-inspector' ),
+                    esc_html__(
+                        'Environment Score: %d/100',
+                        'arabia-inspector'
+                    ),
                     $environment_score
                 );
                 ?>
@@ -86,17 +98,23 @@ class Admin {
             <p>
                 <?php
                 printf(
-                    esc_html__( 'Security Score: %d/100', 'arabia-inspector' ),
+                    esc_html__(
+                        'Security Score: %d/100',
+                        'arabia-inspector'
+                    ),
                     $security_score
                 );
                 ?>
             </p>
+
             <p>
                 <?php
                 printf(
-                    esc_html__( 'Overall Score: %1$d/100 (%2$s)', 'arabia-inspector' ),
-                    $overall_score,
-                    $overall_rating
+                    esc_html__(
+                        'RTL Score: %d/100',
+                        'arabia-inspector'
+                    ),
+                    $rtl_score
                 );
                 ?>
             </p>
@@ -128,10 +146,9 @@ class Admin {
 
                 foreach ( $labels as $key => $label ) :
 
-                    $status = '—'; // Default status
-                    $message = '—'; // Default message
-                    // Get the value from audit results, handling cases where it might be an array or boolean.
-                    $value = $audit_results[ $key ] ?? '';
+                    $status     = '—';
+                    $message    = '—';
+                    $value      = $audit_results[ $key ] ?? '';
 
                     // Handle cases where value is an array (e.g., PHP version with status and message).
                     if ( is_array( $value ) ) {
@@ -244,7 +261,7 @@ class Admin {
                 
                 ?>
             </tbody>
-
+        </table>
 		<?php
 	}
 }
