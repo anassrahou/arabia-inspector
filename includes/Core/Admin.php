@@ -53,17 +53,17 @@ class Admin {
         /*
          * Run the audits and get results.
          */
-        $audit_results      = Environment_Audit::run();
-        $environment_score  = Environment_Audit::get_score();
+        $environment_results = Environment_Audit::run();
+        $environment_score   = Environment_Audit::get_score();
 
-        $security_results   = Security_Audit::run();
-        $security_score     = Security_Audit::get_score();
+        $security_results    = Security_Audit::run();
+        $security_score      = Security_Audit::get_score();
 
-        $rtl_results        = RTL_Audit::run();
-        $rtl_score          = RTL_Audit::get_score();
+        $rtl_results         = RTL_Audit::run();
+        $rtl_score           = RTL_Audit::get_score();
 
-        $overall_score      = Score_Audit::get_overall_score();
-        $overall_rating     = Score_Audit::get_rating( $overall_score );
+        $overall_score       = Score_Audit::get_overall_score();
+        $overall_rating      = Score_Audit::get_rating( $overall_score );
 
 		?>
 
@@ -120,9 +120,71 @@ class Admin {
             </p>
         </div>
 
-        <h2><?php esc_html_e( 'Environment Audit', 'arabia-inspector' ); ?></h2>
-        <table class="widefat striped">
+        <?php
+        
+        // Define labels for each audit check.
+        $environment_labels = array(
+            'wordpress_version' => __( 'WordPress Version', 'arabia-inspector' ),
+            'php_version'       => __( 'PHP Version', 'arabia-inspector' ),
+            'language'          => __( 'Language', 'arabia-inspector' ),
+            'rtl'               => __( 'RTL Enabled', 'arabia-inspector' ),
+            'theme'             => __( 'Active Theme', 'arabia-inspector' ),
+        );
 
+        $security_labels = array(
+            'wp_debug'      => __( 'WP Debug' , 'arabia-inspector' ),
+            'file_editor'   => __( 'File Editor' , 'arabia-inspector' ),
+            'ssl'           => __( 'SSL' , 'arabia-inspector' ),
+            'file_mods'     => __( 'File Modifications' , 'arabia-inspector' ),
+            'wp_debug_log'  => __( 'WP Debug Log' , 'arabia-inspector' ),
+        );
+
+        $rtl_labels = array(
+            'site_language' => __( 'Site Language' , 'arabia-inspector' ),
+            'rtl_enabled'   => __( 'RTL Enabled' , 'arabia-inspector' ),
+            'rtl_stylesheet' => __( 'RTL Stylesheet', 'arabia-inspector' ),
+        );
+
+        self::render_audit_table(
+            __( 'Environment Audit', 'arabia-inspector' ),
+            $environment_results,
+            $environment_labels
+        );
+
+        self::render_audit_table(
+            __( 'Security Audit', 'arabia-inspector' ),
+            $security_results,
+            $security_labels
+        );
+
+        self::render_audit_table(
+            __( 'RTL Audit', 'arabia-inspector' ),
+            $rtl_results,
+            $rtl_labels
+        );
+        ?>
+		<?php
+
+	}
+
+    /**
+     * Render an audit table.
+     *
+     * @param string $title   Table title.
+     * @param array  $results Audit results.
+     * @param array  $labels  Audit labels.
+     *
+     * @return void
+     */
+    private static function render_audit_table(
+        $title,
+        $results,
+        $labels
+    ) {
+        ?>
+        <h2><?php echo esc_html( $title ); ?></h2>
+
+        <table class="widefat striped">
             <thead>
                 <tr>
                     <th><?php esc_html_e( 'Check', 'arabia-inspector' ); ?></th>
@@ -131,137 +193,29 @@ class Admin {
                     <th><?php esc_html_e( 'Message', 'arabia-inspector' ); ?></th>
                 </tr>
             </thead>
+
             <tbody>
 
-                <?php
+                <?php foreach ( $labels as $key => $label ) : ?>
 
-                // Define labels for each audit check.
-                $labels = array(
-                    'wordpress_version' => __( 'WordPress Version', 'arabia-inspector' ),
-                    'php_version'       => __( 'PHP Version', 'arabia-inspector' ),
-                    'language'          => __( 'Language', 'arabia-inspector' ),
-                    'rtl'               => __( 'RTL Enabled', 'arabia-inspector' ),
-                    'theme'             => __( 'Active Theme', 'arabia-inspector' ),
-                );
+                    <?php
+                    $result  = $results[ $key ] ?? array();
+                    $value   = $result['value'] ?? '';
+                    $status  = $result['status'] ?? '—';
+                    $message = $result['message'] ?? '—';
+                    ?>
 
-                foreach ( $labels as $key => $label ) :
-
-                    $status     = '—';
-                    $message    = '—';
-                    $value      = $audit_results[ $key ] ?? '';
-
-                    // Handle cases where value is an array (e.g., PHP version with status and message).
-                    if ( is_array( $value ) ) {
-                        $status = $value['status'] ?? '—';
-                        $message = $value['message'] ?? '—';
-                        $value = $value['value'] ?? '';
-                    }
-
-                    // Convert boolean values to human-readable format.
-                    if ( is_bool( $value ) ) {
-                        $value = $value
-                            ? __( 'Yes', 'arabia-inspector' )
-                            : __( 'No', 'arabia-inspector' );
-                    }
-
-                ?>
-
-                <tr>
-                    <td><?php echo esc_html( $label ); ?></td>
-                    <td><?php echo esc_html( $value ); ?></td>
-                    <td><?php echo esc_html( $status ); ?></td>
-                    <td><?php echo esc_html( $message ); ?></td>
-                </tr>
+                    <tr>
+                        <td><?php echo esc_html( $label ); ?></td>
+                        <td><?php echo esc_html( $value ); ?></td>
+                        <td><?php echo esc_html( $status ); ?></td>
+                        <td><?php echo esc_html( $message ); ?></td>
+                    </tr>
 
                 <?php endforeach; ?>
 
             </tbody>
-
         </table>
-
-        <h2><?php esc_html_e( 'Security Audit', 'arabia-inspector' ); ?></h2>
-
-        <table class="widefat striped">
-            
-            <thead>
-                <tr>
-                    <th><?php esc_html_e( 'Check', 'arabia-inspector' ); ?></th>
-                    <th><?php esc_html_e( 'Value', 'arabia-inspector' ); ?></th>
-                    <th><?php esc_html_e( 'Status', 'arabia-inspector' ); ?></th>
-                    <th><?php esc_html_e( 'Message', 'arabia-inspector' ); ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $security_labels = array(
-                    'wp_debug'      => __( 'WP Debug' , 'arabia-inspector' ),
-                    'file_editor'   => __( 'File Editor' , 'arabia-inspector' ),
-                    'ssl'           => __( 'SSL' , 'arabia-inspector' ),
-                    'file_mods'     => __( 'File Modifications' , 'arabia-inspector' ),
-                    'wp_debug_log'  => __( 'WP Debug Log' , 'arabia-inspector' ),
-                ); ?>
-
-                <?php 
-                foreach ( $security_labels as $key => $label ) :
-                    
-                    $result     = $security_results[ $key ] ?? array();
-                    $value      = $result['value'] ?? '';
-                    $status     = $result['status'] ?? '—';
-                    $message    = $result['message'] ?? '—';
-                ?>
-
-                    <tr>
-                        <td><?php echo esc_html( $label ); ?></td>
-                        <td><?php echo esc_html( $value ); ?></td>
-                        <td><?php echo esc_html( $status ); ?></td>
-                        <td><?php echo esc_html( $message ); ?></td>
-                    </tr>
-                <?php
-                endforeach;
-                
-                ?>
-            </tbody>
-                
-        </table>
-
-        <h2><?php esc_html_e( 'RTL Audit', 'arabia-inspector' ); ?></h2>
-        <table class="widefat striped">
-            
-            <thead>
-                <tr>
-                    <th><?php esc_html_e( 'Check', 'arabia-inspector' ); ?></th>
-                    <th><?php esc_html_e( 'Value', 'arabia-inspector' ); ?></th>
-                    <th><?php esc_html_e( 'Status', 'arabia-inspector' ); ?></th>
-                    <th><?php esc_html_e( 'Message', 'arabia-inspector' ); ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $rtl_labels = array(
-                    'site_language' => __( 'Site Language' , 'arabia-inspector' ),
-                    'rtl_enabled'   => __( 'RTL Enabled' , 'arabia-inspector' ),
-                    'rtl_stylesheet' => __( 'RTL Stylesheet', 'arabia-inspector' ),
-                ); ?>
-
-                <?php 
-                foreach ( $rtl_labels as $key => $label ) :
-                    
-                    $result     = $rtl_results[ $key ] ?? array();
-                    $value      = $result['value'] ?? '';
-                    $status     = $result['status'] ?? '—';
-                    $message    = $result['message'] ?? '—';
-                ?>
-
-                    <tr>
-                        <td><?php echo esc_html( $label ); ?></td>
-                        <td><?php echo esc_html( $value ); ?></td>
-                        <td><?php echo esc_html( $status ); ?></td>
-                        <td><?php echo esc_html( $message ); ?></td>
-                    </tr>
-                <?php
-                endforeach;
-                
-                ?>
-            </tbody>
-        </table>
-		<?php
-	}
+        <?php
+    }
 }
