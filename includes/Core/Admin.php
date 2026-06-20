@@ -23,6 +23,11 @@ class Admin {
 			'admin_menu',
 			array( __CLASS__, 'register_menu' )
 		);
+
+        add_action(
+            'admin_enqueue_scripts',
+            array( __CLASS__, 'enqueue_assets' )
+        );
 	}
 
     /**
@@ -208,7 +213,10 @@ class Admin {
                     <tr>
                         <td><?php echo esc_html( $label ); ?></td>
                         <td><?php echo esc_html( $value ); ?></td>
-                        <td><?php echo esc_html( $status ); ?></td>
+                        <td><?php echo wp_kses_post(
+                                self::render_status_badge( $status )
+                            ); ?>
+                        </td>
                         <td><?php echo esc_html( $message ); ?></td>
                     </tr>
 
@@ -217,5 +225,41 @@ class Admin {
             </tbody>
         </table>
         <?php
+    }
+
+    public static function render_status_badge( $status ) {
+
+        $class = 'ai-badge';
+
+        switch ( $status ) {
+
+            case 'pass':
+                $class .= ' ai-badge-pass';
+                break;
+
+            case 'warning':
+                $class .= ' ai-badge-warning';
+                break;
+
+            case 'critical':
+                $class .= ' ai-badge-critical';
+                break;
+        }
+
+        return sprintf(
+            '<span class="%1$s">%2$s</span>',
+            esc_attr( $class ),
+            esc_html( ucfirst( $status ) )
+        );
+    }
+
+    public static function enqueue_assets() {
+
+        wp_enqueue_style(
+            'arabia-inspector-admin',
+            AI_PLUGIN_URL . 'assets/css/admin.css',
+            array(),
+            AI_VERSION
+        );
     }
 }
