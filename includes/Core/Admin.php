@@ -71,60 +71,64 @@ class Admin {
         $overall_rating      = Score_Audit::get_rating( $overall_score );
 
 		?>
+        <div class="wrap">
+            <div class="ai-dashboard-summary">
 
-        <div class="notice notice-info inline">
-            <p>
-                <strong>
-                    <?php
-                    printf(
-                        esc_html__(
-                            'Overall Score: %1$d/100 (%2$s)',
-                            'arabia-inspector'
-                        ),
-                        $overall_score,
-                        $overall_rating
-                    );
-                    ?>
-                </strong>
-            </p>
-
-            <p>
-                <?php
-                printf(
-                    esc_html__(
-                        'Environment Score: %d/100',
+                <h1>
+                    <?php esc_html_e(
+                        'Arabia Inspector Dashboard',
                         'arabia-inspector'
-                    ),
-                    $environment_score
-                );
-                ?>
-            </p>
+                    ); ?>
+                </h1>
 
-            <p>
-                <?php
-                printf(
-                    esc_html__(
-                        'Security Score: %d/100',
-                        'arabia-inspector'
-                    ),
-                    $security_score
-                );
-                ?>
-            </p>
+                <div class="ai-overall-score">
 
-            <p>
-                <?php
-                printf(
-                    esc_html__(
-                        'RTL Score: %d/100',
-                        'arabia-inspector'
-                    ),
-                    $rtl_score
-                );
-                ?>
-            </p>
-        </div>
+                    <span class="ai-score-value">
+                        <?php echo esc_html( $overall_score ); ?>/100
+                    </span>
+                    <span
+                        class="ai-score-rating <?php echo esc_attr( self::get_rating_class( $overall_rating ) ); ?>"
+                    >
+                        <?php echo esc_html( $overall_rating ); ?>
+                    </span>
 
+                </div>
+
+                <div class="ai-score-breakdown">
+
+                    <div class="ai-score-item">
+                        <strong><?php echo esc_html( $environment_score ); ?></strong>
+                        <span>
+                            <?php esc_html_e(
+                                'Environment',
+                                'arabia-inspector'
+                            ); ?>
+                        </span>
+                    </div>
+
+                    <div class="ai-score-item">
+                        <strong><?php echo esc_html( $security_score ); ?></strong>
+                        <span>
+                            <?php esc_html_e(
+                                'Security',
+                                'arabia-inspector'
+                            ); ?>
+                        </span>
+                    </div>
+
+                    <div class="ai-score-item">
+                        <strong><?php echo esc_html( $rtl_score ); ?></strong>
+                        <span>
+                            <?php esc_html_e(
+                                'RTL',
+                                'arabia-inspector'
+                            ); ?>
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
         <?php
         
         // Define labels for each audit check.
@@ -168,6 +172,7 @@ class Admin {
             $rtl_labels
         );
         ?>
+        </div>
 		<?php
 
 	}
@@ -189,41 +194,41 @@ class Admin {
         ?>
         <h2><?php echo esc_html( $title ); ?></h2>
 
-        <table class="widefat striped">
-            <thead>
-                <tr>
-                    <th><?php esc_html_e( 'Check', 'arabia-inspector' ); ?></th>
-                    <th><?php esc_html_e( 'Value', 'arabia-inspector' ); ?></th>
-                    <th><?php esc_html_e( 'Status', 'arabia-inspector' ); ?></th>
-                    <th><?php esc_html_e( 'Message', 'arabia-inspector' ); ?></th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                <?php foreach ( $labels as $key => $label ) : ?>
-
-                    <?php
-                    $result  = $results[ $key ] ?? array();
-                    $value   = $result['value'] ?? '';
-                    $status  = $result['status'] ?? '—';
-                    $message = $result['message'] ?? '—';
-                    ?>
-
+            <table class="widefat striped">
+                <thead>
                     <tr>
-                        <td><?php echo esc_html( $label ); ?></td>
-                        <td><?php echo esc_html( $value ); ?></td>
-                        <td><?php echo wp_kses_post(
-                                self::render_status_badge( $status )
-                            ); ?>
-                        </td>
-                        <td><?php echo esc_html( $message ); ?></td>
+                        <th><?php esc_html_e( 'Check', 'arabia-inspector' ); ?></th>
+                        <th><?php esc_html_e( 'Value', 'arabia-inspector' ); ?></th>
+                        <th><?php esc_html_e( 'Status', 'arabia-inspector' ); ?></th>
+                        <th><?php esc_html_e( 'Message', 'arabia-inspector' ); ?></th>
                     </tr>
+                </thead>
 
-                <?php endforeach; ?>
+                <tbody>
 
-            </tbody>
-        </table>
+                    <?php foreach ( $labels as $key => $label ) : ?>
+
+                        <?php
+                        $result  = $results[ $key ] ?? array();
+                        $value   = $result['value'] ?? '';
+                        $status  = $result['status'] ?? '—';
+                        $message = $result['message'] ?? '—';
+                        ?>
+
+                        <tr>
+                            <td><?php echo esc_html( $label ); ?></td>
+                            <td><?php echo esc_html( $value ); ?></td>
+                            <td><?php echo wp_kses_post(
+                                    self::render_status_badge( $status )
+                                ); ?>
+                            </td>
+                            <td><?php echo esc_html( $message ); ?></td>
+                        </tr>
+
+                    <?php endforeach; ?>
+
+                </tbody>
+            </table>
         <?php
     }
 
@@ -261,5 +266,32 @@ class Admin {
             array(),
             AI_VERSION
         );
+    }
+
+    /**
+     * Get CSS class for a score rating.
+     *
+     * @param string $rating Score rating.
+     *
+     * @return string
+     */
+    private static function get_rating_class( $rating ) {
+
+        switch ( $rating ) {
+
+            case 'Excellent':
+                return 'ai-rating-excellent';
+
+            case 'Good':
+                return 'ai-rating-good';
+
+            case 'Needs Attention':
+                return 'ai-rating-warning';
+
+            case 'Critical':
+                return 'ai-rating-critical';
+        }
+
+        return '';
     }
 }
