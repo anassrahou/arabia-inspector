@@ -20,6 +20,7 @@ class Plugin {
         require_once AI_PLUGIN_DIR . 'includes/Audits/Security_Audit.php';
         require_once AI_PLUGIN_DIR . 'includes/Audits/Score_Audit.php';
         require_once AI_PLUGIN_DIR . 'includes/Audits/RTL_Audit.php';
+        require_once AI_PLUGIN_DIR . 'includes/Audits/Recommendation_Audit.php';
 
 		self::load_components();
 	}

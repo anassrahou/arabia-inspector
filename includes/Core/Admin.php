@@ -6,6 +6,7 @@ use AI\Audits\Environment_Audit;
 use AI\Audits\Security_Audit;
 use AI\Audits\Score_Audit;
 use AI\Audits\RTL_Audit;
+use AI\Audits\Recommendation_Audit;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -70,6 +71,9 @@ class Admin {
         $overall_score       = Score_Audit::get_overall_score();
         $overall_rating      = Score_Audit::get_rating( $overall_score );
 
+        $recommendations     = Recommendation_Audit::get_recommendations();
+        $recommendation_count = count( $recommendations );
+
 		?>
         <div class="wrap">
             <div class="ai-dashboard-summary">
@@ -128,6 +132,18 @@ class Admin {
 
                 </div>
 
+                <p>
+                    <?php
+                    printf(
+                        esc_html__(
+                            'Recommendations: %d',
+                            'arabia-inspector'
+                        ),
+                        $recommendation_count
+                    );
+                    ?>
+                </p>
+
             </div>
         <?php
         
@@ -170,6 +186,10 @@ class Admin {
             __( 'RTL Audit', 'arabia-inspector' ),
             $rtl_results,
             $rtl_labels
+        );
+
+        self::render_recommendations_table(
+            $recommendations
         );
         ?>
         </div>
@@ -293,5 +313,98 @@ class Admin {
         }
 
         return '';
+    }
+
+    public static function render_recommendations_table(
+        $recommendations
+    ) {
+        ?>
+
+        <h2>
+            <?php esc_html_e(
+                'Recommendations',
+                'arabia-inspector'
+            ); ?>
+        </h2>
+
+        <?php if ( empty( $recommendations ) ) : ?>
+
+            <div class="notice notice-success inline">
+                <p>
+                    <?php esc_html_e(
+                        'No recommendations available. Your website passed all current checks.',
+                        'arabia-inspector'
+                    ); ?>
+                </p>
+            </div>
+
+        <?php else : ?>
+            <table class="widefat striped">
+
+                <thead>
+                    <tr>
+                        <th>
+                            <?php esc_html_e(
+                                'Priority',
+                                'arabia-inspector'
+                            ); ?>
+                        </th>
+
+                        <th>
+                            <?php esc_html_e(
+                                'Recommendation',
+                                'arabia-inspector'
+                            ); ?>
+                        </th>
+
+                        <th>
+                            <?php esc_html_e(
+                                'Details',
+                                'arabia-inspector'
+                            ); ?>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <?php foreach ( $recommendations as $item ) : ?>
+
+                        <tr>
+
+                            <td>
+                                <span class="ai-priority-<?php echo esc_attr( $item['priority'] ); ?>">
+                                    <?php
+                                    echo esc_html(
+                                        ucfirst(
+                                            $item['priority']
+                                        )
+                                    );
+                                    ?>
+                                </span>
+                            </td>
+
+                            <td>
+                                <?php echo esc_html(
+                                    $item['title']
+                                ); ?>
+                            </td>
+
+                            <td>
+                                <?php echo esc_html(
+                                    $item['message']
+                                ); ?>
+                            </td>
+
+                        </tr>
+
+                    <?php endforeach; ?>
+
+                </tbody>
+
+            </table>
+
+        <?php endif;
+
     }
 }

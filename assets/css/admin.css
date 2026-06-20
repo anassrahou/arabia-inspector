@@ -82,3 +82,15 @@
 .ai-rating-critical {
     color: #dc3545;
 }
+
+.ai-priority-high {
+    color: #dc3232;
+}
+
+.ai-priority-medium {
+    color: #ffb900;
+}
+
+.ai-priority-low {
+    color: #46b450;
+}
