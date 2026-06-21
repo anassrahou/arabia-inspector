@@ -35,6 +35,14 @@ class Admin {
             'admin_post_ai_export_report',
             array( __CLASS__, 'handle_export_report' )
         );
+        
+        add_action(
+            'admin_post_ai_export_pdf',
+            array(
+                __CLASS__,
+                'handle_export_pdf'
+            )
+        );
 	}
 
     public static function handle_export_report() {
@@ -42,6 +50,15 @@ class Admin {
         check_admin_referer( 'ai_export_report' );
 
         Report_Exporter::download_report();
+    }
+
+    public static function handle_export_pdf() {
+
+        check_admin_referer(
+            'ai_export_pdf'
+        );
+
+        Report_Exporter::download_pdf();
     }
 
     /**
@@ -180,6 +197,34 @@ class Admin {
                     class="button button-primary"
                     value="<?php esc_attr_e(
                         'Export Report',
+                        'arabia-inspector'
+                    ); ?>"
+                />
+
+            </form>
+
+            <form
+                method="post"
+                action="<?php echo esc_url(
+                    admin_url( 'admin-post.php' )
+                ); ?>"
+            >
+
+                <input
+                    type="hidden"
+                    name="action"
+                    value="ai_export_pdf"
+                />
+
+                <?php wp_nonce_field(
+                    'ai_export_pdf'
+                ); ?>
+
+                <input
+                    type="submit"
+                    class="button"
+                    value="<?php esc_attr_e(
+                        'Export PDF',
                         'arabia-inspector'
                     ); ?>"
                 />

@@ -14,6 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! defined( 'AI_PLUGIN_NAME' ) ) {
+    define( 'AI_PLUGIN_NAME', 'Arabia Inspector' );
+}
+
 if ( ! defined( 'AI_VERSION' ) ) {
     define( 'AI_VERSION', '1.0.0-alpha' );
 }
