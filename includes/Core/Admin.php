@@ -7,6 +7,7 @@ use AI\Audits\Security_Audit;
 use AI\Audits\Score_Audit;
 use AI\Audits\RTL_Audit;
 use AI\Audits\Recommendation_Audit;
+use AI\Core\Report_Exporter;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -29,7 +30,19 @@ class Admin {
             'admin_enqueue_scripts',
             array( __CLASS__, 'enqueue_assets' )
         );
+
+        add_action(
+            'admin_post_ai_export_report',
+            array( __CLASS__, 'handle_export_report' )
+        );
 	}
+
+    public static function handle_export_report() {
+
+        check_admin_referer( 'ai_export_report' );
+
+        Report_Exporter::download_report();
+    }
 
     /**
      * Register the admin menu.
@@ -56,6 +69,13 @@ class Admin {
      */
 	public static function render_dashboard() {
 
+        if (
+            isset( $_POST['ai_export_report'] ) &&
+            check_admin_referer( 'ai_export_report' )
+        ) {
+
+            Report_Exporter::download_report();
+        }
         /*
          * Run the audits and get results.
          */
@@ -145,6 +165,26 @@ class Admin {
                 </p>
 
             </div>
+            <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+
+                <input
+                    type="hidden"
+                    name="action"
+                    value="ai_export_report"
+                />
+
+                <?php wp_nonce_field( 'ai_export_report' ); ?>
+
+                <input
+                    type="submit"
+                    class="button button-primary"
+                    value="<?php esc_attr_e(
+                        'Export Report',
+                        'arabia-inspector'
+                    ); ?>"
+                />
+
+            </form>
         <?php
         
         // Define labels for each audit check.
