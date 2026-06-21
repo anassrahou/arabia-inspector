@@ -7,24 +7,23 @@ use AI\Audits\Security_Audit;
 use AI\Audits\Score_Audit;
 use AI\Audits\RTL_Audit;
 use AI\Audits\Recommendation_Audit;
-use AI\Core\Report_Exporter;
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+    exit;
 }
 
 class Admin {
 
-	/**
-	 * Register hooks.
-	 *
-	 * @return void
-	 */
-	public static function init() {
-		add_action(
-			'admin_menu',
-			array( __CLASS__, 'register_menu' )
-		);
+    /**
+     * Register hooks.
+     *
+     * @return void
+     */
+    public static function init() {
+        add_action(
+            'admin_menu',
+            array( __CLASS__, 'register_menu' )
+        );
 
         add_action(
             'admin_enqueue_scripts',
@@ -38,26 +37,17 @@ class Admin {
         
         add_action(
             'admin_post_ai_export_pdf',
-            array(
-                __CLASS__,
-                'handle_export_pdf'
-            )
+            array( __CLASS__, 'handle_export_pdf' )
         );
-	}
+    }
 
     public static function handle_export_report() {
-
         check_admin_referer( 'ai_export_report' );
-
         Report_Exporter::download_report();
     }
 
     public static function handle_export_pdf() {
-
-        check_admin_referer(
-            'ai_export_pdf'
-        );
-
+        check_admin_referer( 'ai_export_pdf' );
         Report_Exporter::download_pdf();
     }
 
@@ -66,33 +56,24 @@ class Admin {
      *
      * @return void
      */
-	public static function register_menu() {
-
-		add_menu_page(
-			__( 'Arabia Inspector', 'arabia-inspector' ),
-			__( 'Arabia Inspector', 'arabia-inspector' ),
-			'manage_options',
-			'arabia-inspector',
-			array( __CLASS__, 'render_dashboard' ),
-			'dashicons-search',
-			65
-		);
-	}
+    public static function register_menu() {
+        add_menu_page(
+            __( 'Arabia Inspector', 'arabia-inspector' ),
+            __( 'Arabia Inspector', 'arabia-inspector' ),
+            'manage_options',
+            'arabia-inspector',
+            array( __CLASS__, 'render_dashboard' ),
+            'dashicons-search',
+            65
+        );
+    }
 
     /**
      * Render the dashboard page with audit results.
      *
      * @return void
      */
-	public static function render_dashboard() {
-
-        if (
-            isset( $_POST['ai_export_report'] ) &&
-            check_admin_referer( 'ai_export_report' )
-        ) {
-
-            Report_Exporter::download_report();
-        }
+    public static function render_dashboard() {
         /*
          * Run the audits and get results.
          */
@@ -110,8 +91,7 @@ class Admin {
 
         $recommendations     = Recommendation_Audit::get_recommendations();
         $recommendation_count = count( $recommendations );
-
-		?>
+        ?>
         <div class="wrap">
             <div class="ai-dashboard-summary">
 
@@ -127,9 +107,7 @@ class Admin {
                     <span class="ai-score-value">
                         <?php echo esc_html( $overall_score ); ?>/100
                     </span>
-                    <span
-                        class="ai-score-rating <?php echo esc_attr( self::get_rating_class( $overall_rating ) ); ?>"
-                    >
+                    <span class="ai-score-rating <?php echo esc_attr( self::get_rating_class( $overall_rating ) ); ?>">
                         <?php echo esc_html( $overall_rating ); ?>
                     </span>
 
@@ -182,56 +160,28 @@ class Admin {
                 </p>
 
             </div>
+
             <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-
-                <input
-                    type="hidden"
-                    name="action"
-                    value="ai_export_report"
-                />
-
+                <input type="hidden" name="action" value="ai_export_report" />
                 <?php wp_nonce_field( 'ai_export_report' ); ?>
-
                 <input
                     type="submit"
                     class="button button-primary"
-                    value="<?php esc_attr_e(
-                        'Export Report',
-                        'arabia-inspector'
-                    ); ?>"
+                    value="<?php esc_attr_e( 'Export Report', 'arabia-inspector' ); ?>"
                 />
-
             </form>
 
-            <form
-                method="post"
-                action="<?php echo esc_url(
-                    admin_url( 'admin-post.php' )
-                ); ?>"
-            >
-
-                <input
-                    type="hidden"
-                    name="action"
-                    value="ai_export_pdf"
-                />
-
-                <?php wp_nonce_field(
-                    'ai_export_pdf'
-                ); ?>
-
+            <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+                <input type="hidden" name="action" value="ai_export_pdf" />
+                <?php wp_nonce_field( 'ai_export_pdf' ); ?>
                 <input
                     type="submit"
                     class="button"
-                    value="<?php esc_attr_e(
-                        'Export PDF',
-                        'arabia-inspector'
-                    ); ?>"
+                    value="<?php esc_attr_e( 'Export PDF', 'arabia-inspector' ); ?>"
                 />
-
             </form>
+
         <?php
-        
         // Define labels for each audit check.
         $environment_labels = array(
             'wordpress_version' => __( 'WordPress Version', 'arabia-inspector' ),
@@ -242,11 +192,11 @@ class Admin {
         );
 
         $security_labels = array(
-            'wp_debug'      => __( 'WP Debug' , 'arabia-inspector' ),
-            'file_editor'   => __( 'File Editor' , 'arabia-inspector' ),
-            'ssl'           => __( 'SSL' , 'arabia-inspector' ),
-            'file_mods'     => __( 'File Modifications' , 'arabia-inspector' ),
-            'wp_debug_log'  => __( 'WP Debug Log' , 'arabia-inspector' ),
+            'wp_debug'     => __( 'WP Debug' , 'arabia-inspector' ),
+            'file_editor'  => __( 'File Editor' , 'arabia-inspector' ),
+            'ssl'          => __( 'SSL' , 'arabia-inspector' ),
+            'file_mods'    => __( 'File Modifications' , 'arabia-inspector' ),
+            'wp_debug_log' => __( 'WP Debug Log' , 'arabia-inspector' ),
         );
 
         $rtl_labels = array(
@@ -273,84 +223,57 @@ class Admin {
             $rtl_labels
         );
 
-        self::render_recommendations_table(
-            $recommendations
-        );
+        self::render_recommendations_table( $recommendations );
         ?>
         </div>
-		<?php
-
-	}
+        <?php
+    }
 
     /**
      * Render an audit table.
-     *
-     * @param string $title   Table title.
-     * @param array  $results Audit results.
-     * @param array  $labels  Audit labels.
-     *
-     * @return void
      */
-    private static function render_audit_table(
-        $title,
-        $results,
-        $labels
-    ) {
+    private static function render_audit_table( $title, $results, $labels ) {
         ?>
         <h2><?php echo esc_html( $title ); ?></h2>
 
-            <table class="widefat striped">
-                <thead>
+        <table class="widefat striped">
+            <thead>
+                <tr>
+                    <th><?php esc_html_e( 'Check', 'arabia-inspector' ); ?></th>
+                    <th><?php esc_html_e( 'Value', 'arabia-inspector' ); ?></th>
+                    <th><?php esc_html_e( 'Status', 'arabia-inspector' ); ?></th>
+                    <th><?php esc_html_e( 'Message', 'arabia-inspector' ); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ( $labels as $key => $label ) : 
+                    $result  = $results[ $key ] ?? array();
+                    $value   = $result['value'] ?? '';
+                    $status  = $result['status'] ?? '—';
+                    $message = $result['message'] ?? '—';
+                    ?>
                     <tr>
-                        <th><?php esc_html_e( 'Check', 'arabia-inspector' ); ?></th>
-                        <th><?php esc_html_e( 'Value', 'arabia-inspector' ); ?></th>
-                        <th><?php esc_html_e( 'Status', 'arabia-inspector' ); ?></th>
-                        <th><?php esc_html_e( 'Message', 'arabia-inspector' ); ?></th>
+                        <td><?php echo esc_html( $label ); ?></td>
+                        <td><?php echo esc_html( $value ); ?></td>
+                        <td><?php echo wp_kses_post( self::render_status_badge( $status ) ); ?></td>
+                        <td><?php echo esc_html( $message ); ?></td>
                     </tr>
-                </thead>
-
-                <tbody>
-
-                    <?php foreach ( $labels as $key => $label ) : ?>
-
-                        <?php
-                        $result  = $results[ $key ] ?? array();
-                        $value   = $result['value'] ?? '';
-                        $status  = $result['status'] ?? '—';
-                        $message = $result['message'] ?? '—';
-                        ?>
-
-                        <tr>
-                            <td><?php echo esc_html( $label ); ?></td>
-                            <td><?php echo esc_html( $value ); ?></td>
-                            <td><?php echo wp_kses_post(
-                                    self::render_status_badge( $status )
-                                ); ?>
-                            </td>
-                            <td><?php echo esc_html( $message ); ?></td>
-                        </tr>
-
-                    <?php endforeach; ?>
-
-                </tbody>
-            </table>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
         <?php
     }
 
     public static function render_status_badge( $status ) {
-
         $class = 'ai-badge';
 
         switch ( $status ) {
-
             case 'pass':
                 $class .= ' ai-badge-pass';
                 break;
-
             case 'warning':
                 $class .= ' ai-badge-warning';
                 break;
-
             case 'critical':
                 $class .= ' ai-badge-critical';
                 break;
@@ -364,7 +287,6 @@ class Admin {
     }
 
     public static function enqueue_assets() {
-
         wp_enqueue_style(
             'arabia-inspector-admin',
             AI_PLUGIN_URL . 'assets/css/admin.css',
@@ -373,123 +295,51 @@ class Admin {
         );
     }
 
-    /**
-     * Get CSS class for a score rating.
-     *
-     * @param string $rating Score rating.
-     *
-     * @return string
-     */
     private static function get_rating_class( $rating ) {
-
         switch ( $rating ) {
-
             case 'Excellent':
                 return 'ai-rating-excellent';
-
             case 'Good':
                 return 'ai-rating-good';
-
             case 'Needs Attention':
                 return 'ai-rating-warning';
-
             case 'Critical':
                 return 'ai-rating-critical';
         }
-
         return '';
     }
 
-    public static function render_recommendations_table(
-        $recommendations
-    ) {
+    public static function render_recommendations_table( $recommendations ) {
         ?>
-
-        <h2>
-            <?php esc_html_e(
-                'Recommendations',
-                'arabia-inspector'
-            ); ?>
-        </h2>
+        <h2><?php esc_html_e( 'Recommendations', 'arabia-inspector' ); ?></h2>
 
         <?php if ( empty( $recommendations ) ) : ?>
-
             <div class="notice notice-success inline">
-                <p>
-                    <?php esc_html_e(
-                        'No recommendations available. Your website passed all current checks.',
-                        'arabia-inspector'
-                    ); ?>
-                </p>
+                <p><?php esc_html_e( 'No recommendations available. Your website passed all current checks.', 'arabia-inspector' ); ?></p>
             </div>
-
         <?php else : ?>
             <table class="widefat striped">
-
                 <thead>
                     <tr>
-                        <th>
-                            <?php esc_html_e(
-                                'Priority',
-                                'arabia-inspector'
-                            ); ?>
-                        </th>
-
-                        <th>
-                            <?php esc_html_e(
-                                'Recommendation',
-                                'arabia-inspector'
-                            ); ?>
-                        </th>
-
-                        <th>
-                            <?php esc_html_e(
-                                'Details',
-                                'arabia-inspector'
-                            ); ?>
-                        </th>
+                        <th><?php esc_html_e( 'Priority', 'arabia-inspector' ); ?></th>
+                        <th><?php esc_html_e( 'Recommendation', 'arabia-inspector' ); ?></th>
+                        <th><?php esc_html_e( 'Details', 'arabia-inspector' ); ?></th>
                     </tr>
                 </thead>
-
                 <tbody>
-
                     <?php foreach ( $recommendations as $item ) : ?>
-
                         <tr>
-
                             <td>
                                 <span class="ai-priority-<?php echo esc_attr( $item['priority'] ); ?>">
-                                    <?php
-                                    echo esc_html(
-                                        ucfirst(
-                                            $item['priority']
-                                        )
-                                    );
-                                    ?>
+                                    <?php echo esc_html( ucfirst( $item['priority'] ) ); ?>
                                 </span>
                             </td>
-
-                            <td>
-                                <?php echo esc_html(
-                                    $item['title']
-                                ); ?>
-                            </td>
-
-                            <td>
-                                <?php echo esc_html(
-                                    $item['message']
-                                ); ?>
-                            </td>
-
+                            <td><?php echo esc_html( $item['title'] ); ?></td>
+                            <td><?php echo esc_html( $item['message'] ); ?></td>
                         </tr>
-
                     <?php endforeach; ?>
-
                 </tbody>
-
             </table>
-
         <?php endif;
-
     }
 }
