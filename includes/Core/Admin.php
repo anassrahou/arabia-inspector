@@ -161,25 +161,29 @@ class Admin {
 
             </div>
 
-            <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-                <input type="hidden" name="action" value="ai_export_report" />
-                <?php wp_nonce_field( 'ai_export_report' ); ?>
-                <input
-                    type="submit"
-                    class="button button-primary"
-                    value="<?php esc_attr_e( 'Export Report', 'arabia-inspector' ); ?>"
-                />
-            </form>
+<div class="ai-export-actions">
 
-            <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-                <input type="hidden" name="action" value="ai_export_pdf" />
-                <?php wp_nonce_field( 'ai_export_pdf' ); ?>
-                <input
-                    type="submit"
-                    class="button"
-                    value="<?php esc_attr_e( 'Export PDF', 'arabia-inspector' ); ?>"
-                />
-            </form>
+    <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+        <input type="hidden" name="action" value="ai_export_report" />
+        <?php wp_nonce_field( 'ai_export_report' ); ?>
+        <input
+            type="submit"
+            class="button button-primary"
+            value="<?php esc_attr_e( 'Export Report', 'arabia-inspector' ); ?>"
+        />
+    </form>
+
+    <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+        <input type="hidden" name="action" value="ai_export_pdf" />
+        <?php wp_nonce_field( 'ai_export_pdf' ); ?>
+        <input
+            type="submit"
+            class="button"
+            value="<?php esc_attr_e( 'Export PDF', 'arabia-inspector' ); ?>"
+        />
+    </form>
+
+</div>
 
         <?php
         // Define labels for each audit check.

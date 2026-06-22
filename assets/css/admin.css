@@ -94,3 +94,13 @@
 .ai-priority-low {
     color: #46b450;
 }
+
+.ai-export-actions {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.ai-export-actions form {
+    margin: 0;
+}
