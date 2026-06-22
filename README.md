@@ -154,15 +154,33 @@ WordPress Admin → Arabia Inspector
 
 ### Dashboard Overview
 
-[Dashboard Screenshot Placeholder]
+<p align="center">
+    <img
+        src="assets/screenshots/arabia-inspector-overview.png"
+        alt="Arabia Inspector Dashboard"
+        width="900"
+    >
+</p>
 
-### Audit Results
+### Security audit Results
 
-[Audit Results Screenshot Placeholder]
+<p align="center">
+    <img
+        src="assets/screenshots/arabia-inspector-security-audit.png"
+        alt="Arabia Inspector Security Audit"
+        width="900"
+    >
+</p>
 
 ### PDF Report Export
 
-[PDF Export Screenshot Placeholder]
+<p align="center">
+    <img
+        src="assets/screenshots/arabia-inspector-pdf-report.png"
+        alt="PDF Report Export"
+        width="900"
+    >
+</p>
 
 ---
 
