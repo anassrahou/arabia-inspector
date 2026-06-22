@@ -1,0 +1,17 @@
+{
+    "name": "anass/arabia-inspector",
+    "autoload": {
+        "psr-4": {
+            "Anass\\ArabiaInspector\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Anass Rahou",
+            "email": "nsrahou@gmail.com"
+        }
+    ],
+    "require": {
+        "mpdf/mpdf": "^8.3"
+    }
+}

@@ -7,6 +7,7 @@ use AI\Audits\Security_Audit;
 use AI\Audits\RTL_Audit;
 use AI\Audits\Recommendation_Audit;
 use AI\Audits\Score_Audit;
+use AI\PDF\PDF_Generator;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -89,10 +90,22 @@ class Report_Exporter {
     }
 
     public static function download_pdf() {
-        wp_die( 'PDF engine not installed yet.' );
+        
+        $data = self::get_report_data();
+
+        $pdf = PDF_Generator::generate( $data );
+
+        header( 'Content-Type: application/pdf' );
+        header(
+            'Content-Disposition: attachment; filename="arabia-inspector-report.pdf"'
+        );
+
+        echo $pdf;
+        exit;
     }
 
     public static function get_report_data() {
+
         $environment = Environment_Audit::run();
         $security    = Security_Audit::run();
         $rtl         = RTL_Audit::run();

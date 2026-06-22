@@ -34,6 +34,10 @@ if ( ! defined( 'AI_PLUGIN_URL') ) {
     define( 'AI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 }
 
+if ( file_exists( AI_PLUGIN_DIR . '/vendor/autoload.php' )) {
+    require_once AI_PLUGIN_DIR . '/vendor/autoload.php';
+}
+
 require_once AI_PLUGIN_DIR . 'includes/Core/Plugin.php';
 
 add_action(

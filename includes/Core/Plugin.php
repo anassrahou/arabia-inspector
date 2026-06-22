@@ -23,6 +23,7 @@ class Plugin {
 
 		require_once AI_PLUGIN_DIR . 'includes/Core/Admin.php';
         require_once AI_PLUGIN_DIR . 'includes/Core/Report_Exporter.php';
+        require_once AI_PLUGIN_DIR . 'includes/PDF/PDF_Generator.php';
 
 		self::load_components();
 	}
